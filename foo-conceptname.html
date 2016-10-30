@@ -69,6 +69,20 @@
     }
     </code></p>
     <p>It is very confusing to for two of the three uses of <code>ConceptName</code> in this piece of code to have an additional constraint between them, but not the third.</p>
+    <h4>Variadic templates</h4>
+    <p>The current behaviour is also inconsistent with the behaviour of variadic templates:
+    <code>
+    
+    R foo(ConceptName... args);  // args can have different types
+    </code></p>
+    <p>This means that the property that a variadic template behaves as if you had written a bunch of overloads with different numbers of parameters, does not hold when the parameter types are specified by a concept name.</p>
+    <p>It also means that the common pattern of writing your variadic template like so:
+    <code>
+    
+    R foo(ConceptName arg);  // handle one argument (base case)
+    R foo(ConceptName arg1, ConceptName arg2, ConceptName... rest);  // handle two or more aguments
+    </code></p>
+    <p>results in a big surprise: <code>arg1</code> and <code>arg2</code> must have the same type, while the remaining arguments may have different types!</p>
     <h4>Concepts are to types as types are to values</h4>
     <p>Concepts are to types as types are to values, in the sense that a concept defines a set of valid types much like a type defines a set of valid values. </p>
     <p>When we write <code> int x, int y </code>, <code>int</code> is a <em>type</em>, and the meaning is that <code>x</code> and <code>y</code> both have <em>type</em> <code>int</code>; beyond that, <code>x</code> and <code>y</code> are not required to have the same <em>value</em>.</p>
@@ -83,6 +97,16 @@
       <li><a href="https://groups.google.com/a/isocpp.org/forum/#!topic/std-proposals/_YpRok7LaEU/discussion">std-proposals discussion</a><sup>[4]</sup></li>
       <li><a href="https://www.reddit.com/r/cpp/comments/53i9a2/conceptlite_short_notation_problem/">Reddit question</a><sup>[5]</sup></li>
     </ul></p>
+    <h4>Perfect forwarding</h4>
+    <p>The "same type" requirement can be overly restrictive in situations involving perfect forwarding. Consider:
+    <code>
+    
+    void foo(Container&amp;&amp; a, Container&amp;&amp; b);
+    // ...
+    std::vector&lt;int&gt; a;
+    foo(a, std::vector&lt;int&gt;{1, 2, 3});  // error: cannot deduce 'Container'
+    </code></p>
+    <p>Here, even though the arguments have the same type, they have different value categories, and as a result, due to the use of perfect forwarding, the specific parameter types differ by a reference, preventing deduction.</p>
     <h3>How would we express the old meaning?</h3>
     <p>What if one wants to express the old meaning of <code> foo(ConceptName,ConceptName) </code>, a function with two
     parameters of the same type that satisfies a concept? In addition to the non-terse notation:
@@ -109,11 +133,16 @@
     </code></p>
     <p>In any case, using notation available today, if equal treatment for deduction matters, the non-terse notation can be used.</p>
     <h3>Counter-arguments</h3>
+    <h4>Frequency of use</h4>
     <p>It can be argued that you don't often want a function that takes two arguments of potentially different types satisfying the same concept without having an additional relationship between the two types.</p>
     <p>The authors believe that arguments like this based on frequency of use, should take a back seat to the arguments listed above, notably the argument based on first principles.</p>
-    <p>However, even from a frequency point of view, it should be noted that a <a href="https://groups.google.com/a/isocpp.org/forum/#!topic/concepts/cdX4X0ngJqc/discussion">survey of standard library functions</a><sup>[7]</sup> found a significant amount of "same concept, different type" functions, comparable to the amount of "same concept, same type" functions when controlling for iterator pairs.</p> 
+    <p>However, even from a frequency point of view, it should be noted that a <a href="https://groups.google.com/a/isocpp.org/forum/#!topic/concepts/cdX4X0ngJqc/discussion">survey of standard library functions</a><sup>[7]</sup> found a significant amount of "same concept, different type" functions, comparable to the amount of "same concept, same type" functions when controlling for iterator pairs.</p>
+    <h4>Interaction with definition checking</h4>
+    <p>It can also be argued that this change will encourage template authors to write under-constrained templates, because they will opt to use the terse <code> R foo(ConceptName, ConceptName); </code> form even in cases where in there should be an additional constraint on the parameter types. A proliferation of under-constrained templates will make the introduction of definition checking harder, because an under-constrained template will not pass definition checking.</p>
+    <p>The authors acknowledge that this is a concern, but believe that the problem of under-constrained templates is not specific to this change. Template authors will sometimes write under-constrained templates without this change, too, such as by writing <code> R foo(Concept1, Concept2) </code> when an additional relationship between the types is present.</p>
+    <p>Chances are that, due to the presence of under-constrained templates (irrespective of this change), definition checking will be a opt-in feature anyways.</p>
     <h3>Acknowledgements</h3>
-    <p>The authors would like to thank everyone who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
+    <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, and everyone else who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
     <h3>References</h3>
     <ol>
      <li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf</a></li>
