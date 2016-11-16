@@ -21,7 +21,7 @@
         <td>Botond Ballo &lt;botond@mozilla.com&gt;</td>
       </tr>
       <tr>
-        <th>Date:</th><td>2016-10-30</td>
+        <th>Date:</th><td>2016-11-08</td>
       </tr>
       <tr>
         <th>Audience:</th><td>Evolution Working Group</td>
@@ -47,6 +47,7 @@
         <ul>
           <li>New sections under "Arguments": "Variadic templates" and "Perfect forwarding"</li>
           <li>New section under "Counter-arguments": "Interaction with definition checking"</li>
+          <li>New section "Impact on the return type"</li>
         </ul>
       </li>
       <li><strong>R0</strong>
@@ -155,6 +156,37 @@
     <p>It can also be argued that this change will encourage template authors to write under-constrained templates, because they will opt to use the terse <code> R foo(ConceptName, ConceptName); </code> form even in cases where in there should be an additional constraint on the parameter types. A proliferation of under-constrained templates will make the introduction of definition checking harder, because an under-constrained template will not pass definition checking.</p>
     <p>The authors acknowledge that this is a concern, but believe that the problem of under-constrained templates is not specific to this change. Template authors will sometimes write under-constrained templates without this change, too, such as by writing <code> R foo(Concept1, Concept2) </code> when an additional relationship between the types is present.</p>
     <p>Chances are that, due to the presence of under-constrained templates (irrespective of this change), definition checking will be a opt-in feature anyways.</p>
+    <h3>Impact on the return type</h3>
+    <p>The case where a concept name appears both in a parameter type and a return type also needs to be addressed.</p>
+    <p>Currently, the following code:
+    <code>
+    
+    ConceptName foo(ConceptName arg);
+    </code></p>
+    <p>is a shorthand for:
+    <code>
+    
+    template &lt;ConceptName __C&gt;
+    __C foo(__C arg);
+    </code></p>
+    <p>With this proposal, for consistency, it ought to become a shorthand for:
+    <code>
+    
+    template &lt;ConceptName __C&gt;
+    ConceptName foo(__C arg);
+    </code></p>
+    <p>That is, the return type changes from being determined by the parameter type, to being deduced from the types of return expressions (while still being constrained by <code>ConceptName</code>). This has the implication that if the return type isn't deducible (e.g. because different return expressions have different types, or one return expression is a braced-init-list (as in <code>return { exprs }</code>)), the function becomes ill-formed.</p>
+    <p>If the original semantics is desired, the non-terse notation can be used:
+    <code>
+    
+    template &lt;ConceptName C&gt;
+    C foo(C arg);
+    </code></p>
+    <p>Alternatively, one can envision an extension to N3878 similar to the one mentioned above:
+    <code>
+    
+    auto foo(ConceptName{C} arg) -> C;
+    </code></p>
     <h3>Acknowledgements</h3>
     <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, and everyone else who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
     <h3>References</h3>
