@@ -12,7 +12,7 @@
     <h2>Revisiting the meaning of <code>foo(ConceptName,ConceptName)</code></h2>
     <table>
       <tr>
-        <th>Document number:</th><td>P0464R1</td>
+        <th>Document number:</th><td>D0464R2</td>
       </tr>
       <tr>
         <th rowspan=2>Authors:</th><td>Tony van Eerd &lt;tvaneerd@gmail.com&gt;</td>
@@ -21,7 +21,7 @@
         <td>Botond Ballo &lt;botond@mozilla.com&gt;</td>
       </tr>
       <tr>
-        <th>Date:</th><td>2016-11-08</td>
+        <th>Date:</th><td>2017-02-11</td>
       </tr>
       <tr>
         <th>Audience:</th><td>Evolution Working Group</td>
@@ -43,6 +43,11 @@
     </p>
     <h3>Revision History</h3>
     <ul>
+      <li><strong>R2</strong>
+        <ul>
+          <li>New section under "Arguments": "Consistency with dynamic polymorphism"</li>
+        </ul>
+      </li>
       <li><strong>R1</strong>
         <ul>
           <li>New sections under "Arguments": "Variadic templates" and "Perfect forwarding"</li>
@@ -84,6 +89,15 @@
     }
     </code></p>
     <p>It is very confusing to for two of the three uses of <code>ConceptName</code> in this piece of code to have an additional constraint between them, but not the third.</p>
+    <h4>Consistency with dynamic polymorphism</h4>
+    <p>Templates and concepts can be thought of as the static counterpart to the dynamic polymorphism achieved via inheritance.</p>
+    <p>In a dynamic polymorphism scenario, if <code>Writable</code> is a base class, and you have a function with the following signature:
+    <code>
+    
+    void foo(Writable&amp; a, Writable&amp; b);
+    </code></p>
+    <p>there is no requirement that the concrete (derived) types of the arguments are the same.</p>
+    <p>It's surprising, then, if we want to use static polymorphism and make <code>Writable</code> a concept, that the concrete types of the arguments are now required to be the same.</p>
     <h4>Variadic templates</h4>
     <p>The current behaviour is also inconsistent with the behaviour of variadic templates:
     <code>
@@ -188,7 +202,7 @@
     auto foo(ConceptName{C} arg) -> C;
     </code></p>
     <h3>Acknowledgements</h3>
-    <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, and everyone else who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
+    <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, Vadim Petrochenkov, and everyone else who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
     <h3>References</h3>
     <ol>
      <li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf</a></li>
