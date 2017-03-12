@@ -1,0 +1,24 @@
+People in the "Concepts user feedback" reflector thread (resulting from Hal 
+emailing authors of existing code using concepts on Github to ask them for 
+feedback, and forwarding their feedback to the reflector) expressed support 
+for P0464
+  - Joseph Jevnik ("strongly support")
+      - "I hadn't realized this wasn't already the case"
+          - this is strong evidence that the proposed behaviour is the 
+            intuitive one!
+  - Christopher Di Bella
+      - "I like this proposal. It is very much in line with my own thoughts, 
+         and even covers some things that I've taken for granted or 
+         overlooked."
+      - "It wasn't until my talk at CppCon that I found out (mid-talk) that 
+         this *isn't* how terse concepts behave."
+  - Oleg Davydov
+      - provided a new argument: the workaround to make the types the same
+        ("template <ConceptName C> void foo(C, C)") is shorter than the 
+        workaround to make the types different 
+        ("template <ConceptName C1, ConceptName C2> void foo(C1, C2)")
+  - aside: two authors, Maikel Nadolski and Christopher Di Bella, liked 
+           Richard's N3878-like 
+           "template <Concept [A, B, C]>" syntax, but suggested changing it to 
+           "template <Concept{A, B, C}>" (i.e., the actual N3878 syntax) 
+           instead
