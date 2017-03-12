@@ -12,7 +12,7 @@
     <h2>Revisiting the meaning of <code>foo(ConceptName,ConceptName)</code></h2>
     <table>
       <tr>
-        <th>Document number:</th><td>D0464R2</td>
+        <th>Document number:</th><td>P0464R2</td>
       </tr>
       <tr>
         <th rowspan=2>Authors:</th><td>Tony van Eerd &lt;tvaneerd@gmail.com&gt;</td>
@@ -21,7 +21,7 @@
         <td>Botond Ballo &lt;botond@mozilla.com&gt;</td>
       </tr>
       <tr>
-        <th>Date:</th><td>2017-02-11</td>
+        <th>Date:</th><td>2017-03-12</td>
       </tr>
       <tr>
         <th>Audience:</th><td>Evolution Working Group</td>
@@ -46,6 +46,7 @@
       <li><strong>R2</strong>
         <ul>
           <li>New section under "Arguments": "Consistency with dynamic polymorphism"</li>
+          <li>Expanded "User confusion" section with more recent feedback from users</li>
         </ul>
       </li>
       <li><strong>R1</strong>
@@ -126,6 +127,18 @@
       <li><a href="https://groups.google.com/a/isocpp.org/forum/#!topic/std-proposals/_YpRok7LaEU/discussion">std-proposals discussion</a><sup>[4]</sup></li>
       <li><a href="https://www.reddit.com/r/cpp/comments/53i9a2/conceptlite_short_notation_problem/">Reddit question</a><sup>[5]</sup></li>
     </ul></p>
+    <p>In addition, during the February 2017 meeting in Kona, Hal Finkel sent an email to authors of GitHub projects that use Concepts, asking their feedback
+    on a number of proposed changes to the Concepts TS, including this one.
+    <ul>
+      <li>Of the three users that responded with feedback on this proposal <strong>all three</strong>
+    (<a href="http://lists.isocpp.org/ext/2017/03/2349.php">1</a>, <a href="http://lists.isocpp.org/ext/2017/03/2345.php">2</a>, 
+    <a href="http://lists.isocpp.org/ext/2017/03/2342.php">3</a>) expressed support for the proposed change.</li>
+      <li>One of them <a href="http://lists.isocpp.org/ext/2017/03/2345.php">reported</a> that they had been surprised when they previously realized 
+      that the semantics weren't <em>already</em> what we are proposing.</li>
+      <li>Another <a href="http://lists.isocpp.org/ext/2017/03/2342.php">reported</a> that they just realized <em>now</em>, upon reading (an earlier 
+      version of) this paper, that the semantics aren't already what we are proposing, and were quite surprised.
+    </ul>
+    This, in the authors' opinion, is strong evidence that the intuitive semantics is the one we are proposing.</p>
     <h4>Perfect forwarding</h4>
     <p>The "same type" requirement can be overly restrictive in situations involving perfect forwarding. Consider:
     <code>
@@ -202,7 +215,11 @@
     auto foo(ConceptName{C} arg) -> C;
     </code></p>
     <h3>Acknowledgements</h3>
-    <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, Vadim Petrochenkov, and everyone else who participated in discussions on this subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments to the table.</p>
+    <p>The authors would like to thank Andrew Sutton, Guillaume Racicot, Vadim Petrochenkov, and everyone else who participated in discussions on this 
+    subject (on the public mailing lists, in private email correspondence, and elsewhere), for bringing a variety of valuable perspectives and arguments 
+    to the table.</p>
+    <p>In addition, the authors would like to Hal Finkel for soliciting feedback from users of Concepts about proposals including this one, and users
+    including Oleg Davydov, Christopher Di Bella, and Joseph Jevnik, for responding with feedback on this proposal.</p>
     <h3>References</h3>
     <ol>
      <li><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/n4553.pdf</a></li>
