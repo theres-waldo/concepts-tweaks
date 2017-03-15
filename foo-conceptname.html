@@ -47,6 +47,7 @@
         <ul>
           <li>New section under "Arguments": "Consistency with dynamic polymorphism"</li>
           <li>Expanded "User confusion" section with more recent feedback from users</li>
+          <li>Added mention of consistency with <code>auto</code> to "Impact of the return type" section</li>
         </ul>
       </li>
       <li><strong>R1</strong>
@@ -203,6 +204,7 @@
     ConceptName foo(__C arg);
     </code></p>
     <p>That is, the return type changes from being determined by the parameter type, to being deduced from the types of return expressions (while still being constrained by <code>ConceptName</code>). This has the implication that if the return type isn't deducible (e.g. because different return expressions have different types, or one return expression is a braced-init-list (as in <code>return { exprs }</code>)), the function becomes ill-formed.</p>
+    <p>(Note that this is consistent with how <code> auto foo(auto arg); </code> behaves.)</p>
     <p>If the original semantics is desired, the non-terse notation can be used:
     <code>
     
